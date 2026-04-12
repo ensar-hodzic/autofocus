@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": ["ES2022"],
+    "strict": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "baseUrl": ".",
+    "paths": {
+      "@autofocus/domain": ["packages/domain/src/index.ts"],
+      "@autofocus/domain/*": ["packages/domain/src/*"]
+    }
+  },
+  "include": ["tests/**/*.ts", "convex/**/*.ts", "packages/**/*.ts"]
+}

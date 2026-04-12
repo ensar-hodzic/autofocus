@@ -1,0 +1,21 @@
+{
+  "name": "autofocus",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@10.18.3",
+  "scripts": {
+    "dev": "concurrently \"pnpm --filter @autofocus/web dev\" \"pnpm convex:dev\"",
+    "build": "pnpm --filter @autofocus/domain build && pnpm --filter @autofocus/web build",
+    "lint": "pnpm --filter @autofocus/web lint",
+    "typecheck": "pnpm --filter @autofocus/domain build && pnpm --filter @autofocus/web typecheck && tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "convex:dev": "convex dev",
+    "convex:codegen": "convex codegen"
+  },
+  "devDependencies": {
+    "@types/node": "^24.6.0",
+    "concurrently": "^9.2.1",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.4"
+  }
+}
