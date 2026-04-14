@@ -1,0 +1,12 @@
+{
+  "extends": "../packages/config-typescript/base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "baseUrl": "..",
+    "paths": {
+      "@autofocus/domain": ["packages/domain/src/index.ts"],
+      "@autofocus/domain/*": ["packages/domain/src/*"]
+    }
+  },
+  "include": ["./**/*.ts"]
+}

@@ -2,6 +2,8 @@
 
 # dependencies
 /node_modules
+node_modules/
+**/node_modules/
 /.pnp
 .pnp.js
 
@@ -11,6 +13,7 @@
 # next.js
 /.next/
 /out/
+apps/web/.next/
 
 # production
 /build
@@ -34,3 +37,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+packages/domain/dist
+packages/domain/src/*.js
+packages/domain/src/*.d.ts
+
+# convex
+convex/_generated/

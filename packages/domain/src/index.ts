@@ -149,6 +149,16 @@ export type ManagementDashboardData = {
   assignments: DashboardAssignment[];
 };
 
+export type TimeWindow = {
+  startAt: number;
+  endAt: number;
+};
+
+export type BookingConflict = {
+  overlaps: boolean;
+  reason: string | null;
+};
+
 export const routePermissions: RoutePermission[] = [
   {
     key: "dashboard",
@@ -159,44 +169,44 @@ export const routePermissions: RoutePermission[] = [
   {
     key: "projects",
     href: "/projects",
-    label: "Projekti",
+    label: "Projects",
     allowedAccessLevels: ["admin", "management"]
   },
   {
     key: "equipment",
     href: "/resources/equipment",
-    label: "Oprema",
+    label: "Equipment",
     allowedAccessLevels: ["admin", "management", "operations", "technical_support"]
   },
   {
     key: "studios",
     href: "/resources/studios",
-    label: "Studiji",
+    label: "Studios",
     allowedAccessLevels: ["admin", "management", "operations"]
   },
   {
     key: "staff",
     href: "/resources/staff",
-    label: "Osoblje",
+    label: "Staff",
     allowedAccessLevels: ["admin", "management", "operations"]
   },
   {
     key: "events",
     href: "/events",
-    label: "Događaji",
+    label: "Events",
     allowedAccessLevels: ["admin", "management", "technical_support"]
   },
   {
     key: "admin_access",
     href: "/admin/access",
-    label: "Pristupi",
+    label: "Access",
     allowedAccessLevels: ["admin"]
   }
 ];
 
 export const defaultDemoSession: AppSession = {
   id: "demo-production-manager",
-  fullName: "Demo Menadžer",
+  fullName: "Demo Manager",
   email: "demo@autofocus.local",
   role: "production_manager",
   accessLevel: "management",
@@ -231,4 +241,53 @@ export function isBookingStatus(value: string): value is BookingStatus {
 
 export function isEventStatus(value: string): value is EventStatus {
   return eventStatuses.includes(value as EventStatus);
+}
+
+export function hasWindowConflict(
+  left: TimeWindow,
+  right: TimeWindow
+): BookingConflict {
+  if (left.endAt <= left.startAt || right.endAt <= right.startAt) {
+    return {
+      overlaps: false,
+      reason: "invalid_window"
+    };
+  }
+
+  const overlaps = left.startAt < right.endAt && right.startAt < left.endAt;
+
+  return {
+    overlaps,
+    reason: overlaps ? "overlap_detected" : null
+  };
+}
+
+const bookingStatusTransitions: Record<BookingStatus, BookingStatus[]> = {
+  draft: ["pending", "cancelled"],
+  pending: ["confirmed", "cancelled"],
+  confirmed: ["completed", "cancelled"],
+  cancelled: [],
+  completed: []
+};
+
+const eventStatusTransitions: Record<EventStatus, EventStatus[]> = {
+  open: ["acknowledged", "in_progress", "closed"],
+  acknowledged: ["in_progress", "resolved", "closed"],
+  in_progress: ["resolved", "closed"],
+  resolved: ["closed"],
+  closed: []
+};
+
+export function canTransitionBookingStatus(
+  from: BookingStatus,
+  to: BookingStatus
+): boolean {
+  return bookingStatusTransitions[from].includes(to);
+}
+
+export function canTransitionEventStatus(
+  from: EventStatus,
+  to: EventStatus
+): boolean {
+  return eventStatusTransitions[from].includes(to);
 }
